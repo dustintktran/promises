@@ -16,6 +16,7 @@
 
 var Promise = require('bluebird');
 var lib = require('../../lib/advancedChainingLib');
+var request = require('request');
 
 // We're using Clarifai's API to recognize concepts in an image into a list of concepts
 // Visit the following url to sign up for a free account
@@ -25,9 +26,47 @@ var lib = require('../../lib/advancedChainingLib');
 // the `Predict on Public and Custom Models` scope
 
 var searchCommonConceptsFromGitHubProfiles = function (githubHandles) {
+  //input : array ...
+  let array = githubHandles.map((user) => {
+    return new Promise((resolve, reject) => {
+      request({
+        url: `https://api.github.com/users/${user}`,
+        headers: {
+          'Accept': 'application/vnd.github.v3+json',
+          'user-agent': 'node.js'
+        }
+      }, function (error, response, body) {
+        if (error) {
+          reject(error);
+        } else {
+          var parsed = JSON.parse(response.body);
+          console.log(parsed)
+          resolve(parsed.avatar_url);
+        }
+      });
+    })
+  })
+
+  return Promise.all(array)
+    .then(data => {
+      // console.log(data[0])
+      let final = data.map((url) => {
+        return new Promise((resolve, reject) => {
+          lib.predictImage(url)
+          // console.log(lib.predictImage(url))
+          // .then(result => console.log(result))
+        })
+      })
+      // console.log(final)
+    })
+    // .then(data => console.log(data))
+  //
+
 };
+
 
 // Export these functions so we can unit test them
 module.exports = {
   searchCommonConceptsFromGitHubProfiles,
 };
+

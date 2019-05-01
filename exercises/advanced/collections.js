@@ -11,7 +11,6 @@ var fs = require('fs');
 var Promise = require('bluebird');
 
 var combineFirstLineOfManyFiles = function (filePaths, writePath) {
-  // TODO
   let array = filePaths.map(item => {
     return new Promise((resolve, reject) => {
       fs.readFile(item, 'utf8', (err, success) => {
@@ -28,7 +27,6 @@ var combineFirstLineOfManyFiles = function (filePaths, writePath) {
   return Promise.all(array)
     .then(data => data.join('\n'))
     .then(data => {
-      console.log("our data!!!", data)
       return new Promise((resolve, reject) => {
         fs.writeFile(writePath, data, 'utf8', (err) => {
           if (err) {

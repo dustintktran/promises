@@ -33,7 +33,6 @@ var fetchProfileAndWriteToFile = function (readFilePath, writeFilePath) {
           if (error) {
             reject(error);
           } else {
-            // console.log(response)
             resolve(response);
           }
         });

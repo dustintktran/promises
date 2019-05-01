@@ -15,8 +15,12 @@ var Promise = require('bluebird');
  */
 
 var promisify = function(nodeStyleFn) {
- // TODO
+  return new Promise((resolve, reject) => {
+    return nodeStyleFn(fielPath, resolve)
+  })
 };
+
+//readFile(path, utf8, callback)
 
 
 /**
